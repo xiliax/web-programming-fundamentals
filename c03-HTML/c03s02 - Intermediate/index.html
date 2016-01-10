@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="DemoApp">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Angular JS Material - Layout</title>
+
+    <!-- Material -->
+    <!-- Angular Material CSS now available via Google CDN; version 0.11.2 used here -->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.11.2/angular-material.min.css">
+
+</head>
+<style>
+    #header{
+        background-color: cornflowerblue;
+    }
+    #footer{
+        text-align: center;
+        font-size: 2.1em;
+        background-color: cornflowerblue
+    }
+    #owner{
+        font-size: .5em;
+    }
+</style>
+
+<body>
+    <div layout="column">
+        <div id="header">
+                <h1>My Club Info</h1>
+        </div>
+        
+        <!-- main - with side and content -->
+        <div layout="row">
+            <!-- side nav -->
+            <div  id="sidenav" flex-gt-sm="33" flex-sm="50" style="border: 2px solid blue;">
+                <div >
+                    <div >
+                        <h3>Menu</h3>
+                    </div>
+                </div>
+                <div >
+                    <div >
+                        <a href="">My Resume</a>
+                        <br/><a href="">Club Info</a>
+                        <br/><a href="">Contact Me</a>
+                    </div>
+                </div>
+            </div>
+  
+            <!-- content -->
+            <div id="content" flex-gt-sm="66" flex-sm="50" style="border: 4px dashed red;">
+                Hello, welcome to my site. Click a link on the left.
+                <div>
+                    this is some more stuff
+                </div>
+                <div>
+                    <p>cool stuff here</p>
+                    <h3>yes, this is it</h3>
+                </div>
+            </div>
+        </div>
+        <div id="footer">
+                Copyright 2015 <span id="owner">by Verrol Adams</span>
+        </div>
+    </div>
+
+
+    <!-- Angular Material Dependencies -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js"></script>
+
+
+    <!-- Angular Material Javascript now available via Google CDN; version 0.11.2 used here -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.11.2/angular-material.min.js"></script>
+
+    <script>
+        angular.module('DemoApp', ['ngMaterial']);
+    </script>
+</body>
+
+</html>
