@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="DemoApp">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Angular JS Material - Form</title>
+
+    <!-- Material -->
+    <!-- Angular Material CSS now available via Google CDN; version 0.11.2 used here -->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.11.2/angular-material.min.css">
+
+</head>
+
+<body>
+    <div layout="column">
+        <form>
+            <md-input-container>
+                <label for=“name”>Name:</label>
+                <input name=“name” />
+            </md-input-container>
+
+            <md-button type="submit">Save</md-button>
+        </form>
+
+
+    </div>
+
+
+    <!-- Angular Material Dependencies -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js"></script>
+
+
+    <!-- Angular Material Javascript now available via Google CDN; version 0.11.2 used here -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.11.2/angular-material.min.js"></script>
+
+    <script>
+        angular.module('DemoApp', ['ngMaterial']);
+    </script>
+</body>
+
+</html>
