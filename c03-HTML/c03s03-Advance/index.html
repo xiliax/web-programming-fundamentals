@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>HTML Form</title>
+</head>
+
+<body>
+    <form method="post">
+        <fieldset>
+            <legend>Personal</legend>
+            <label for="name">Name:</label>
+            <input type="text" name="name" />
+            <lable for="password">Password: </lable>
+            <input type="password" name="password" />
+            <label for="age">Age:</label>
+            <input type="number" name="age" max="200" min="18" value="100" />
+            <label for="sex">Male: </label>
+            <input type="radio" name="sex" />
+            <label for="sex">Female: </label>
+            <input type="radio" name="sex" checked />
+
+        </fieldset>
+        <br/>
+        <fieldset>
+            <legend>Address</legend>
+            <table>
+                <tr>
+                    <td colspan="6">
+                        <label for="stree">Street: </label>
+                        <input type="text" name="street" style="width:300px" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        City:
+                        <input type="text" name="city" />
+                    </td>
+                    <td colspan="2">
+                        State:
+                        <input list="states" name="state" />
+                        <datalist id="states">
+                            <option value="IL"></option>
+                            <option value="CA"></option>
+                            <option value="NJ"></option>
+                            <option value="NY"></option>
+                        </datalist>
+                    </td>
+                    <td colspan="2">
+                        Zip:
+                        <input type="number" name="zip" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        Home Phone:
+                        <input type="text" name="home_phone" />
+                    </td>
+                    <td colspan="3">
+                        Business Phone:
+                        <input type="text" name="business_phone" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        Mobile Phone:
+                        <input type="text" name="mobile_phone" />
+                    </td>
+                    <td colspan="3">
+                        Email Address:
+                        <input type="email" name="email" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="3">
+                        <button type="reset">Clear</button>
+
+                    </td>
+                    <td colspan="3">
+                        <button type="submit" onclick="alert('I am clicked');return false">Save</button>
+
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+
+        Note:
+        <textarea name="note" cols="100" rows="4"></textarea>
+
+    </form>
+
+</body>
+
+</html>
