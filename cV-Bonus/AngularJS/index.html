@@ -11,82 +11,108 @@
     <p></p>
     <form id='myForm'>
         <label for='name'>Description: </label>
-        <input type='text' id='description' name="description" placeholder="describe the task here" value="Some task that needs doing" />
+        <input type='text' id='description' name="description" placeholder="describe the task here" />
         <select id="progress" name='progress'>
             <option value="0">Not Started</option>
             <option value="1">In Progress</option>
             <option value="2">Completed</option>
         </select>
-        <button id='save' onclick="saveTodo();">Save</button>
+        <button onclick="saveTodo(event);">Save</button>
+        <button onclick="clearInputs(event);">Clear</button>
     </form>
     <hr/>
     <div id='output'>
-        <table id="listing" border="1" cellpadding="5px">
-            <tr>
-                <th>#</th>
-                <th>Description</th>
-                <th>Progress</th>
-                <th>Action</th>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>1</tdWit>
-                    <td>Pick up 1g of Milk</td>
-                    <td>Not Started</td>
-                    <td>
-                        <button id="delete">Delete</button>
-                        <button id="edit">Edit</button>
-                    </td>
-            </tr>
+        <table border="1" cellpadding="5px">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Description</th>
+                    <th>Progress</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="listing">
+            </tbody>
         </table>
     </div>
 
     <script>
         var todos = [];
+        var progressLabels = ['Not Started', 'In Progress', 'Completed'];
+        var editing = false;
+        var editIndex = 0;
 
-        function saveTodo() {
-            alert('this is a test');
+        function saveTodo(evt) {
+            evt.preventDefault();
             var descEl = document.getElementById('description');
+            var description = descEl.value;
             var progressEl = document.getElementById('progress');
+            var progress = progressEl.value;
 
             var todo = {
-
+                description: description,
+                progress: progress
             };
-            todos.push(todo);
-            alert('this');
-            updateList();
+
+            if (editing) {
+                todos[editIndex] = todo;
+                editing = false;
+            } else {
+                todos.push(todo);
+            }
+
+            clearInputs(evt);
+            updateListing();
         }
 
-        function updateList() {
-            var tableEl = document.getElementById('listing');
-            var length = todo.length;
+        function updateListing() {
+            var length = todos.length;
             var i = 0;
             var row = null;
             var all = '';
-            for (i = 0; i < length; i++) {
+            for (i = 0; i < length; i = i + 1) {
                 row = '<tr>' +
-                    '<td>' + i + 1 + '</td>' +
-                    '<td>' + todo[i].description + '</td>' +
-                    '<td>' + todo[i].progress + '</td>' +
+                    '<td>' + (i + 1) + '</td>' +
+                    '<td>' + todos[i].description + '</td>' +
+                    '<td>' + progressLabels[todos[i].progress] + '</td>' +
                     '<td>' +
-                    '  <button onclick="deleteTodo(i)">Delete</button>' +
-                    '  <button onclick="editTodo(i)">Edit</button>' +
+                    '  <button onclick="deleteTodo(' + i + ')">Delete</button>' +
+                    '  <button onclick="editTodo(' + i + ')">Edit</button>' +
                     '</td>' +
                     '</tr>';
 
                 all = all + row;
             }
 
-            alert(all);
+            var tableEl = document.getElementById('listing');
             tableEl.innerHTML = all;
         }
 
-        function deleteTodo(i) {
-
+        function deleteTodo(index) {
+            todos.splice(index, 1);
+            updateListing();
         }
 
-        function editTod(i) {
+        function editTodo(index) {
+            var todo = todos[index];
+            editing = true;
+            editIndex = index;
 
+            var descEl = document.getElementById('description');
+            descEl.value = todo.description;
+            var progressEl = document.getElementById('progress');
+            progressEl.selectedIndex = 0;
+        }
+
+        function clearInputs(evt) {
+            evt.preventDefault();
+
+            var descEl = document.getElementById('description');
+            var progressEl = document.getElementById('progress');
+
+            descEl.value = '';
+            progressEl.selectedIndex = 0;
+            editing = false;
         }
     </script>
 </body>
