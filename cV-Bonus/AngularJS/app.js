@@ -1,77 +1,46 @@
-var todos = [];
-var progressLabels = ['Not Started', 'In Progress', 'Completed'];
-var editing = false;
-var editIndex = 0;
+var app = angular.module('MyTodo', ['ngMaterial']);
 
-function saveTodo(evt) {
-    evt.preventDefault();
-    var descEl = document.getElementById('description');
-    var description = descEl.value;
-    var progressEl = document.getElementById('progress');
-    var progress = progressEl.value;
+app.controller('TodoCtrl', function ($scope) {
+    $scope.todos = [];
+    $scope.progressLabels = ['Not Started', 'In Progress', 'Completed'];
+    var editing = false;
+    var editIndex = 0;
 
-    var todo = {
-        description: description,
-        progress: progress
+    $scope.description = '';
+    $scope.progress = '0';
+
+    $scope.editTodo = function (index) {
+        var todo = $scope.todos[index];
+        editing = true;
+        editIndex = index;
+
+        $scope.description = todo.description;
+        $scope.progress = todo.progress;
     };
 
-    if (editing) {
-        todos[editIndex] = todo;
+    $scope.deleteTodo = function (index) {
+        $scope.todos.splice(index, 1);
+    };
+
+    $scope.saveTodo = function () {
+        var todo = {
+            description: $scope.description,
+            progress: $scope.progress
+        };
+
+        if (editing) {
+            $scope.todos[editIndex] = todo;
+            editing = false;
+        } else {
+            $scope.todos.push(todo);
+        }
+
+        clearInputs(evt);
+    };
+
+    $scope.clearInputs = function () {
+        $scope.description = '';
+        $scope.progress = '0';
         editing = false;
-    } else {
-        todos.push(todo);
-    }
-
-    clearInputs(evt);
-    updateListing();
-}
-
-function updateListing() {
-    var length = todos.length;
-    var i = 0;
-    var row = null;
-    var all = '';
-    for (i = 0; i < length; i = i + 1) {
-        row = '<tr>' +
-            '<td>' + (i + 1) + '</td>' +
-            '<td>' + todos[i].description + '</td>' +
-            '<td>' + progressLabels[todos[i].progress] + '</td>' +
-            '<td>' +
-            '  <button onclick="deleteTodo(' + i + ')">Delete</button>' +
-            '  <button onclick="editTodo(' + i + ')">Edit</button>' +
-            '</td>' +
-            '</tr>';
-
-        all = all + row;
-    }
-
-    var tableEl = document.getElementById('listing');
-    tableEl.innerHTML = all;
-}
-
-function deleteTodo(index) {
-    todos.splice(index, 1);
-    updateListing();
-}
-
-function editTodo(index) {
-    var todo = todos[index];
-    editing = true;
-    editIndex = index;
-
-    var descEl = document.getElementById('description');
-    descEl.value = todo.description;
-    var progressEl = document.getElementById('progress');
-    progressEl.selectedIndex = 0;
-}
-
-function clearInputs(evt) {
-    evt.preventDefault();
-
-    var descEl = document.getElementById('description');
-    var progressEl = document.getElementById('progress');
-
-    descEl.value = '';
-    progressEl.selectedIndex = 0;
-    editing = false;
-}
+    };
+});

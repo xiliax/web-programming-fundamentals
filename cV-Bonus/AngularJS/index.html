@@ -1,41 +1,60 @@
 <!doctype html>
 <!-- The basics -->
-<html>
+<html ng-app='MyTodo'>
 
 <head>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
+    <meta name="viewport" content="initial-scale=1" />
     <title>My Todo</title>
 </head>
 
-<body>
-    <h1>Welcome : My Todo List</h1>
-    <p></p>
-    <form id='myForm'>
-        <label for='name'>Description: </label>
-        <input type='text' id='description' name="description" placeholder="describe the task here" />
-        <select id="progress" name='progress'>
-            <option value="0">Not Started</option>
-            <option value="1">In Progress</option>
-            <option value="2">Completed</option>
-        </select>
-        <button onclick="saveTodo(event);">Save</button>
-        <button onclick="clearInputs(event);">Clear</button>
-    </form>
-    <hr/>
-    <div id='output'>
-        <table border="1" cellpadding="5px">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Description</th>
-                    <th>Progress</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="listing">
-            </tbody>
-        </table>
-    </div>
+<body layout="column" ng-controller='TodoCtrl'>
+    <md-content layout-padding>
+        <h1>Welcome : My Todo List</h1>
+    </md-content>
+    <md-content layout-padding>
+        <form id='myForm'>
+            <div layout>
+                <md-input-container flex="50">
+                    <label>Description: </label>
+                    <input type='text' ng-model="description" placeholder="describe the task here" required="true" md-maxlength="100" />
+                </md-input-container>
+                <md-input-container flex="20">
+                    <md-select ng-model='progress'>
+                        <md-option value="0">Not Started</md-option>
+                        <md-option value="1">In Progress</md-option>
+                        <md-option value="2">Completed</md-option>
+                    </md-select>
+                </md-input-container>
 
+                <md-button class="md-raised md-primary" ng-click="saveTodo();">Save</md-button>
+                <md-button class="md-raised" ng-click="clearInputs();">Clear</md-button>
+            </div>
+
+        </form>
+    </md-content>
+
+    <md-content>
+        <md-list>
+            <md-list-item ng-repeat="todo in todos">
+                <div class="md-list-item-text" layout="column">
+                    <h3>{{todo.description}}</h3> {{progressLabels[todo.progress]}}
+                    <div layout="row">
+                        <md-button class="md-raised" ng-click="deleteTodo($index)">Delete</md-button>
+                        <md-button class="md-raised my-primary" ng-click="editTodo($index)">Edit</md-button>
+                    </div>
+                </div>
+            </md-list-item>
+        </md-list>
+    </md-content>
+
+    <!-- Angular Material Dependencies -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.js"></script>
     <script src="app.js"></script>
 </body>
 
