@@ -7,39 +7,88 @@
 </head>
 
 <body>
-    <h1</h1>
-        <p>Welcome : My Todo List</p>
-        <form id='myForm'>
-            <label for='name'>Description: </label>
-            <input type='text' id='description' name="description" placeholder="describe the task here" />
-            <select id="progress" name='progress'>
-                <option value="0">Not Started</option>
-                <option value="1">In Progress</option>
-                <option value="2">Completed</option>
-            </select>
-            <button id='save'>Save</button>
-        </form>
-
-        <div id='output'>
-            <table id="listing">
-                <tr>
-                    <th>#</th>
-                    <th>Description</th>
-                    <th>Progress</th>
-                    <th>Action</th>
-                </tr>
-                <tr>
-                    <td>1</td>
+    <h1>Welcome : My Todo List</h1>
+    <p></p>
+    <form id='myForm'>
+        <label for='name'>Description: </label>
+        <input type='text' id='description' name="description" placeholder="describe the task here" value="Some task that needs doing" />
+        <select id="progress" name='progress'>
+            <option value="0">Not Started</option>
+            <option value="1">In Progress</option>
+            <option value="2">Completed</option>
+        </select>
+        <button id='save' onclick="saveTodo();">Save</button>
+    </form>
+    <hr/>
+    <div id='output'>
+        <table id="listing" border="1" cellpadding="5px">
+            <tr>
+                <th>#</th>
+                <th>Description</th>
+                <th>Progress</th>
+                <th>Action</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>1</tdWit>
                     <td>Pick up 1g of Milk</td>
                     <td>Not Started</td>
                     <td>
                         <button id="delete">Delete</button>
                         <button id="edit">Edit</button>
                     </td>
-                </tr>
-            </table>
-        </div>
+            </tr>
+        </table>
+    </div>
 
+    <script>
+        var todos = [];
+
+        function saveTodo() {
+            alert('this is a test');
+            var descEl = document.getElementById('description');
+            var progressEl = document.getElementById('progress');
+
+            var todo = {
+
+            };
+            todos.push(todo);
+            alert('this');
+            updateList();
+        }
+
+        function updateList() {
+            var tableEl = document.getElementById('listing');
+            var length = todo.length;
+            var i = 0;
+            var row = null;
+            var all = '';
+            for (i = 0; i < length; i++) {
+                row = '<tr>' +
+                    '<td>' + i + 1 + '</td>' +
+                    '<td>' + todo[i].description + '</td>' +
+                    '<td>' + todo[i].progress + '</td>' +
+                    '<td>' +
+                    '  <button onclick="deleteTodo(i)">Delete</button>' +
+                    '  <button onclick="editTodo(i)">Edit</button>' +
+                    '</td>' +
+                    '</tr>';
+
+                all = all + row;
+            }
+
+            alert(all);
+            tableEl.innerHTML = all;
+        }
+
+        function deleteTodo(i) {
+
+        }
+
+        function editTod(i) {
+
+        }
+    </script>
 </body>
 
 </html>
