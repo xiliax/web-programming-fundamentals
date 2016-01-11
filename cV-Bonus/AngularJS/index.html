@@ -1,0 +1,30 @@
+<html ng-app='MyApp'>
+
+<head>
+    <title>My ToDo</title>
+</head>
+
+<body ng-controller='MyCtrl'>
+    <h1 id='h1'>Hello {{name}}</h1>
+    <p>Welcome there...</p>
+    <form id='myForm'>
+        <label for='name'>Name: </label>
+        <input type='text' id='name' ng-model='name' />
+        <input type='email' ng-model='name' />
+        <button ng-click="sayHi();">Submit</button>
+    </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.min.js"></script>
+    <script>
+        var app = angular.module('MyApp', []);
+
+        app.controller('MyCtrl', function ($scope) {
+            $scope.name = 'World!';
+            $scope.sayHi = function () {
+                alert('Hello from sayHi(): ' + $scope.name);
+            };
+        });
+    </script>
+</body>
+
+</html>
