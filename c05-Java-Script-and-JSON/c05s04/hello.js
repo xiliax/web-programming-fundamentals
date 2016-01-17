@@ -1,17 +1,15 @@
-// My 'hello world' program in JavaScript
+// My 'hello world' computer program
 console.log("Hello, World")
 
-console.log("Hello,", "World\n")
-
-console.error("Hello,", "World")
+console.log('hello', "world")
 
 /*
-Statement
-calling a
+statement
 function
-
+function call
 function argument(s)
-Object
-membership
-comment: single line, and multi-line
+membership, using '.'
+or dot operator
+object
+comment
 */
