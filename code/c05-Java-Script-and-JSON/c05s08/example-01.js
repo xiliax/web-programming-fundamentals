@@ -26,8 +26,8 @@ var sayHello2 = function (aName, aNumber) {
     console.log("The value of 'aNumber' parameter is " + aNumber)
 }
 
-sayHello1(name, pi)
-sayHello2(name, pi)
+sayHello1(name, pi) // sayHello1('verrol', 3.14)
+sayHello2(name, pi) // sayHello2('verrol', 3.14)
 
 /**
  * Output:
