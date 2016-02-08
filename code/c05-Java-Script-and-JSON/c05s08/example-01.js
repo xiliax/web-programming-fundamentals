@@ -28,3 +28,13 @@ var sayHello2 = function (aName, aNumber) {
 
 sayHello1(name, pi)
 sayHello2(name, pi)
+
+/**
+ * Output:
+
+Hello verrol
+The value of 'aNumber' parameter is 3.14
+Hello verrol
+The value of 'aNumber' parameter is 3.14
+
+ */
