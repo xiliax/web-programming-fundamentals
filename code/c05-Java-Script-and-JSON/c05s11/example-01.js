@@ -16,3 +16,19 @@ console.log("\nPrint again...")
 console.log("Day 1 8am temperature: " + day1[0])
 console.log("Day 1 12pm temperature: " + day1[1])
 console.log("Day 1 6pm temperature: " + day1[2])
+
+/*
+ * Output:
+ *------------------
+
+day 1 temperature readings:  [ 76, 81, 79 ]
+Day 1 8am temperature: 76
+Day 1 12pm temperature: 81
+Day 1 6pm temperature: 79
+
+Print again...
+Day 1 8am temperature: 76
+Day 1 12pm temperature: 81
+Day 1 6pm temperature: 79
+
+*/
