@@ -25,6 +25,16 @@ console.log("temperature readings for day-1: ", day1)
  * Output:
  *------------------
 
-
+temperature readings for day-1:  [ 76, 81, 79 ]
+remove 6pm temperature
+temperature readings for day-1:  [ 76, 81 ]
+evening temperature:  79
+remove 8am temperature
+temperature readings for day-1:  [ 81 ]
+morning temperature:  76
+add evening temperature to end of array
+temperature readings for day-1:  [ 81, 79 ]
+add morning temperature to front of array
+temperature readings for day-1:  [ 76, 81, 79 ]
 
 */
