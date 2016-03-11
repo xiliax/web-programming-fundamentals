@@ -24,7 +24,6 @@ var f2 = new foo()
 console.log(f2);
 
 /* === Output ====
-
 [Function: foo]
 { readLocal: 5, setLocal: [Function], getLocal: [Function] }
 5
@@ -34,5 +33,4 @@ console.log(f2);
   getLocal: [Function],
   myName: 'Verrol' }
 { readLocal: 5, setLocal: [Function], getLocal: [Function] }
-
 */
