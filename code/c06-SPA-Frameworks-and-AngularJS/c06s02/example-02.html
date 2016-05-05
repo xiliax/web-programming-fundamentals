@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+    <head>
+        <title>Using 'Ng-If' Directive</title>
+    </head>
+    <body>
+        <h3>Ng-If</h3>
+        <div>
+            <input type="text" ng-model="name"/>
+            <p ng-if="name">Input text: {{name}}</p>
+            <hr/>
+            <p>Show More?
+                <input type="checkbox" ng-model="showMore"/>
+            </p>
+            <p ng-if="showMore">This is a whole lot more stuff. Well, maybe not...</p>
+            <hr/>
+              How many apples?<input type="range" ng-model="count" min="0" max="20" value="0"/>{{count}} Apples
+            <p ng-if="count >= 10">Whoa! You have at least 10 apples</p>
+        </div>
+        <!-- Angular Material Dependencies -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    </body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" ng-app>
+    <head>
+        <title>Using 'Ng-Model' Directive</title>
+    </head>
+    <body>
+        <h3>Ng-Model</h3>
+        <div>
+            <input type="text" ng-model="name"/>
+            <p>Input text: {{name}}</p>
+            <hr/>
+            <input type="checkbox" ng-model="isValid"/>
+            <p>Is Valid: {{isValid}}</p>
+            <hr/>
+            <input type="number" ng-model="count" min="10" max="20"/>
+            <p>Count: {{count}}</p>
+            <hr/>
+            <input type="range" ng-model="count2" min="10" max="20"/>
+            <p>Count 2: {{count2}}</p>
+        </div>
+        <!-- Angular Material Dependencies -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    </body>
+</html>
