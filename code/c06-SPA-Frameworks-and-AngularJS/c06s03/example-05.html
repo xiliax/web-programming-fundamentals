@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="MyApp">
+    <head>
+        <title>Population Data</title>
+    </head>
+    <body ng-controller="MyController">
+        <h3>Countries by Population</h3>
+        <table border="2">
+            <tr>
+                <th>Name</th>
+                <th>Population</th>
+            </tr>
+            <tr ng-repeat="c in data.countries">
+                <td>{{c.name}}</td>
+                <td>{{c.population}}</td>
+            </tr>
+        </table>
+        <!-- Angular Material Dependencies -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+        <script>
+            function MyController($scope){
+                var jsonString = '{ "countries":[ {"name":"Bahamas,  The", "population": 383054}, {"name":"Canada", "population": 35543658}, {"name":"Dominican Republic", "population": 10405943}, {"name":"Spain", "population": 46476032}, {"name":"Guyana", "population": 763893}, {"name":"Jamaica", "population": 2720554}, {"name":"Puerto Rico", "population": 3548397}, {"name":"Trinidad and Tobago", "population": 1354483}, {"name":"United States", "population": 318857056} ] }'
+                $scope.data = JSON.parse(jsonString)
+            }
+
+            var app = angular.module("MyApp", []);
+            app.controller("MyController", MyController);
+        </script>
+    </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="MyApp">
+    <head>
+        <title>Angular Controller and the 'Ng-Controller' Directive</title>
+    </head>
+    <body>
+        <h3>Ng-Controller</h3>
+        <div ng-controller="MyController">
+            <input type="text" ng-model="name"/>
+            <p>Input text: {{name}}</p>
+            <hr/>
+            <input type="checkbox" ng-model="isValid"/>
+            <p>Is Valid: {{isValid}}</p>
+            <hr/>
+            <input type="number" ng-model="count" min="10" max="20"/>
+            <p>Count: {{count}}</p>
+            <hr/>
+            <input type="range" ng-model="count2" min="10" max="20"/>
+            <p>Count 2: {{count2}}</p>
+        </div>
+        <!-- Angular Material Dependencies -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+        <script>
+            function MyController($scope){
+                $scope.name = 'Verrol'
+                $scope.isValid = true
+                $scope.count = 15
+                $scope.count2 = 12
+            }
+
+            var app = angular.module("MyApp", [])
+            app.controller("MyController", MyController)
+        </script>
+    </body>
+</html>
