@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ToDoApp">
+
+<head>
+  <title>Angular To-Do Application</title>
+</head>
+
+<body>
+  <h3>To-Do Application</h3>
+  <div ng-controller="MainController">
+
+    <form>
+      <legend title="Task">
+        Title:
+        <input type="text" ng-model="task.title" />
+        <br/> Status:
+        <select ng-model="task.status" aria-label="ngSelected demo">
+          <option>Not Started</option>
+          <option>Inprogress</option>
+          <option>Completed</option>
+        </select>
+        <br/>
+        <details ng-open="task.description">
+          <textarea ng-model="task.description"></textarea>
+        </details>
+      </legend>
+
+      <input ng-disabled="!task.title" ng-hide="isEdit" type="button" value="Add" ng-click="addItem()" />
+      <input ng-disabled="!task.title" ng-show="isEdit" type="button" value="Update" ng-click="updateItem()" />
+    </form>
+
+    <hr/>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="item in list">
+          <td>{{item.title}}</td>
+          <td>{{item.status}}</td>
+          <td>
+            <a href="" ng-click="removeItem($index)">X</a> |
+            <a href="" ng-click="editItem($index)">E</a> |
+            <input type="checkbox" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- Angular Material Dependencies -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+  <script>
+    function MyController($scope) {
+      function initTask() {
+        $scope.task = {
+          title: ''
+          , status: 'Not Started'
+          , description: ''
+        };
+      }
+
+      $scope.list = [];
+      initTask();
+      $scope.isEdit = false
+
+      $scope.editItem = function (index) {
+        $scope.task = $scope.list[index]
+        $scope.isEdit = true
+        $scope.index = index
+      };
+
+      $scope.updateItem = function () {
+        $scope.list[$scope.index] = $scope.task;
+        initTask();
+        $scope.isEdit = false
+      };
+
+      $scope.removeItem = function (index) {
+        $scope.list.splice(index, 1)
+      };
+
+      $scope.addItem = function () {
+        var todoItem = $scope.task
+        $scope.list.push(todoItem);
+        initTask();
+      };
+    }
+
+    var app = angular.module("ToDoApp", [])
+    app.controller("MainController", MyController)
+  </script>
+</body>
+
+</html>
