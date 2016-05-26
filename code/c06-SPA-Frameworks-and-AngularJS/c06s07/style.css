@@ -1,0 +1,12 @@
+body {
+  background-color: aliceblue;
+}
+
+#header {
+  background-color: azure;
+  padding-bottom: 5px;
+}
+
+#content {
+  border-style: solid;
+}

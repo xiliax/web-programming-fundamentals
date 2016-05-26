@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ToDoApp">
+
+<head>
+  <title>Angular Routing Demo</title>
+  <link type="text/css" rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="header">
+    <h3>Angular Routing Demo</h3>
+    <a href="#/">Home</a> <a href="#/page1">Page 1</a> <a href="#/page2">Page 2</a>
+  </div>
+  <div id="container" ng-view></div>
+  <!-- Angular Material Dependencies -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-route.min.js"></script>
+  <script>
+    var app = angular.module("ToDoApp", ['ngRoute'])
+
+    app.config(function ($routeProvider) {
+
+      $routeProvider
+        .when("/", {
+          template: "Hello, welcome home!"
+        })
+        .when("/page1", {
+          template: "This is page 1"
+        })
+        .when("/page2", {
+          template: "This is page 2"
+        })
+
+      .otherwise("/")
+    })
+  </script>
+</body>
+
+</html>
