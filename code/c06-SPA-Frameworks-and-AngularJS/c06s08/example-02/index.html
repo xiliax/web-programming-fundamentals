@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ToDoApp">
+
+<head>
+  <title>Angular Routing And Params</title>
+  <link type="text/css" rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="header">
+    <h3>Angular Routing And Params</h3>
+  </div>
+  <hr/>
+  <div id="container" ng-view></div>
+  <!-- Angular Material Dependencies -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-route.min.js"></script>
+  <script>
+    var app = angular.module("ToDoApp", ['ngRoute'])
+
+    app.config(function ($routeProvider) {
+
+      $routeProvider
+        .when("/", {
+          templateUrl: "page.html"
+          , controller: "TestParamsController"
+        })
+        .when("/user", {
+          templateUrl: "page.html"
+          , controller: "TestParamsController"
+        })
+        .when("/post/:id", {
+          templateUrl: "page.html"
+          , controller: "TestParamsController"
+        })
+        .when("/event/:id/view", {
+          templateUrl: "page.html"
+          , controller: "TestParamsController"
+        })
+        .otherwise("/")
+    })
+
+    app.controller("TestParamsController", function ($scope, $location, $routeParams) {
+      $scope.params = $routeParams;
+      $scope.path = $location.path()
+    });
+  </script>
+</body>
+
+</html>
