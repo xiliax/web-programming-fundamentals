@@ -44,7 +44,7 @@ app.controller("AddItemController", function ($scope, $rootScope, $location) {
 app.controller("EditItemController", function ($scope, $rootScope, $routeParams, $location) {
   $scope.isNew = false;
   var selectedIndex = Number($routeParams.id) - 1;
-  $scope.item = $rootScope.items[selectedIndex]
+  $scope.item = angular.copy($rootScope.items[selectedIndex])
 
   $scope.updateItem = function () {
     $rootScope.items[selectedIndex] = $scope.item
