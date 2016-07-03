@@ -1,0 +1,24 @@
+body {
+  background-color: aliceblue;
+}
+
+#header {
+  background-color: azure;
+  padding-bottom: 5px;
+}
+
+#content {
+  border-style: solid;
+}
+
+#welcome {
+  float: right
+}
+
+.btns_right {
+  float: right;
+}
+
+.btns_left {
+  float: left;
+}

@@ -1,0 +1,25 @@
+<div>
+  Tasks Completed: {{(list | filter : 'Completed').length}}
+  <hr/> Search:
+  <input type="text" ng-model='qstring' />
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="task in tasks | filter : qstring">
+        <td>{{task.title}}</td>
+        <td>{{task.status}}</td>
+        <td>
+          <a href="#/edit/{{task.id}}">E</a> |
+          <input ng-disabled="task.status == 'Completed'" type="checkbox" ng-click="setCompleted(task.id)" ng-checked="task.status == 'Completed'" />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

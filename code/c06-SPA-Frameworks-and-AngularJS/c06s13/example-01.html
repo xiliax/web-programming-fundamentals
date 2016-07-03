@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ToDoApp">
+
+<head>
+  <title>Angular Routing Demo</title>
+</head>
+
+<body ng-controller="MainController">
+  <div id="header">
+    <h3>Angular Event Passing Demo</h3>
+    <div ng-show="authenticated">
+      Hello, {{currentUser.name}}
+      <hr/>
+      <a href="#/">Home</a> | <a href="#/page1">Page 1</a> | <a href="#/login">Logout</a>
+    </div>
+
+  </div>
+  <div id="container" ng-view></div>
+  <!-- Angular Material Dependencies -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-route.min.js"></script>
+  <script>
+    var app = angular.module("ToDoApp", ['ngRoute'])
+
+    app.config(function ($routeProvider) {
+
+      $routeProvider
+        .when("/", {
+          template: "Hello, welcome home!"
+          , controller: "HomeController"
+        })
+        .when("/page1", {
+          template: "This is page 1"
+          , controller: "Page1Controller"
+        })
+        .when("/login", {
+          templateUrl: "example-01-login.html"
+          , controller: "LoginController"
+        })
+
+      .otherwise("/login")
+    });
+
+    app.service("UserService", function ($rootScope) {
+      var currentUser = null;
+
+      function login(username) {
+        if (!username) {
+          return false;
+        }
+
+        currentUser = {
+          name: username
+        };
+
+        $rootScope.$broadcast("auth");
+
+        return true;
+      }
+
+      function getCurrentUser() {
+        console.log("UserService.logout() - get current user: ", currentUser)
+
+        return currentUser;
+      }
+
+      function logout() {
+        currentUser = null;
+        $rootScope.$broadcast("auth")
+      }
+
+      function isAuthenticated() {
+        return (currentUser != null)
+      }
+
+      var service = {};
+      service.getCurrentUser = getCurrentUser;
+      service.login = login;
+      service.logout = logout;
+      service.isAuthenticated = isAuthenticated;
+      return service;
+    });
+
+    app.controller("MainController", function ($scope, UserService) {
+      // the next three (3) statements gets executed when the controller runs
+      $scope.currentUser = UserService.getCurrentUser();
+      $scope.authenticated = UserService.isAuthenticated();
+
+      $scope.$on("auth", function () {
+        // these two (2) statements gets executed by the callback function provided
+        // to $on. $on is called when an event name "auth" is sent/triggered
+        $scope.currentUser = UserService.getCurrentUser();
+        $scope.authenticated = UserService.isAuthenticated();
+      });
+    });
+
+    app.controller("LoginController", function ($scope, UserService, $location) {
+      UserService.logout();
+
+      $scope.doLogin = function (username) {
+        if (UserService.login(username)) {
+          $location.path("/")
+        }
+      }
+    });
+
+    app.controller("HomeController", function ($scope, UserService, $location) {
+      if (!UserService.isAuthenticated()) {
+        $location.path("/login")
+        return
+      }
+    });
+
+    app.controller("Page1Controller", function ($scope, UserService, $location) {
+      if (!UserService.isAuthenticated()) {
+        $location.path("/login")
+        return
+      }
+    });
+  </script>
+</body>
+
+</html>
