@@ -1,0 +1,38 @@
+<div>
+  <h5>Create Account</h5>
+  <form>
+    <table border="0">
+      <tr>
+        <td>Username:</td>
+        <td>
+          <input type="text" ng-model="user.username" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Password:
+        </td>
+        <td>
+          <input type="password" ng-model="user.password" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Admin:
+          <input type="checkbox" ng-model="user.admin" />
+        </td>
+      </tr>
+    </table>
+
+    <div>
+      <div class="btns_left">
+        <input ng-disabled="!user.username" ng-show="isNew" type="button" value="ADD" ng-click="saveUser()" />
+        <input ng-disabled="!user.username" ng-hide="isNew" type="button" value="UPDATE" ng-click="updateUser()" />
+        <input type="button" value="CANCEL" ng-click="cancelUser()" />
+      </div>
+      <div class="btns_right">
+        <input ng-show="!isNew && currentUser.admin" type="button" value="DELETE" ng-click="removeUser(user.id)" />
+      </div>
+    </div>
+  </form>
+</div>
