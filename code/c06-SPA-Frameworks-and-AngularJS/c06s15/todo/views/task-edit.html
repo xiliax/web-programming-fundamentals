@@ -1,0 +1,30 @@
+<div>
+  <h5>Task Form</h5>
+  <form>
+    <legend title="Task">
+      Title:
+      <input type="text" ng-model="task.title" />
+      <br/> Status:
+      <select ng-model="task.status" aria-label="ngSelected demo">
+        <option>Not Started</option>
+        <option>Inprogress</option>
+        <option>Completed</option>
+      </select>
+      <br/>
+      <details ng-open="task.description">
+        <textarea ng-model="task.description"></textarea>
+      </details>
+    </legend>
+
+    <div>
+      <div class="btns_left">
+        <input ng-disabled="!task.title" ng-show="isNew" type="button" value="ADD" ng-click="saveTask()" />
+        <input ng-disabled="!task.title" ng-hide="isNew" type="button" value="UPDATE" ng-click="updateTask()" />
+        <input type="button" value="CANCEL" ng-click="cancelTask()" />
+      </div>
+      <div class="btns_right">
+        <input ng-hide="isNew" type="button" value="DELETE" ng-click="removeTask(task.id)" />
+      </div>
+    </div>
+  </form>
+</div>

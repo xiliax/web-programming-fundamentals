@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ToDoApp">
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <div id="header">
+    <h3>Fetching Remote Data</h3>
+    <div>
+      <hr/>
+      <a href="#/">Home</a> | <a href="#/list">Fetch</a>
+    </div>
+
+  </div>
+  <div id="container" ng-view></div>
+
+  <!-- Angular Material Dependencies -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-route.min.js"></script>
+  <script>
+    var app = angular.module("ToDoApp", ['ngRoute'])
+
+    app.config(function ($routeProvider) {
+
+      $routeProvider
+        .when("/", {
+          template: "Welcome, Home"
+        })
+        .when("/list", {
+          templateUrl: "example-01-listing.html"
+          , controller: "Page1Controller"
+        })
+
+      .otherwise("/")
+    });
+
+    app.controller("Page1Controller", function ($scope, $http) {
+      $scope.tasks = []
+
+      $http.get("/api/tasks.json").success(function (resp) {
+        console.log("DEBUG: success: ", resp)
+        $scope.tasks = resp.tasks;
+      }).error(function (resp, status) {
+        console.log("ERROR: Saving error: resp: ", resp, ", status: ", status)
+      });
+    });
+  </script>
+</body>
+
+</html>

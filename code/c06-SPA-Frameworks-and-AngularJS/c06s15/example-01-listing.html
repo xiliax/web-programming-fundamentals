@@ -1,0 +1,17 @@
+<div>
+  Total: {{tasks.length}}
+  <table border="1">
+    <thead>
+      <th>Task ID</th>
+      <th>Title</th>
+      <th>Status</th>
+      <th>Owner ID</th>
+    </thead>
+    <tr ng-repeat="task in tasks">
+      <td>{{task.id}}</td>
+      <td>{{task.title}}</td>
+      <td>{{task.status}}</td>
+      <td>{{task.ownerId}}</td>
+    </tr>
+  </table>
+</div>
