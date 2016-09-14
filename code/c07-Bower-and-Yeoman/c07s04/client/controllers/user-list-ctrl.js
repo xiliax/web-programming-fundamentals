@@ -1,16 +1,22 @@
 var app = angular.module("ToDoApp")
 
-app.controller("ListUsersController", function ($scope, UserDbService, $location) {
+app.controller("ListUsersController", function($scope, UserDbService, $location) {
+  $scope.users = []
   if (!UserDbService.isAdmin()) {
     $location.path('/')
   }
 
-  $scope.users = UserDbService.getAllUsers();
-  $scope.toggleRole = function (userId, flag) {
+  UserDbService.getAllUsers(function(users) {
+    $scope.users = users
+  });
+
+  $scope.toggleRole = function(userId, flag) {
     UserDbService.updateUser(userId, {
       admin: flag
     });
 
-    $scope.users = UserDbService.getAllUsers();
+    UserDbService.getAllUsers(function(users) {
+      $scope.users = users
+    });
   };
 });

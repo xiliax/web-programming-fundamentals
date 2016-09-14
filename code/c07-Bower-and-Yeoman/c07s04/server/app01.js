@@ -1,89 +1,362 @@
 /* 
-  A simple NodeJS API server which does the following:
-  1. Accepts POST request to the API endpoint /api/tasks
-     - JSON object is: {"title":<string>, "ownerId":<number>, "status":<string>}
-       NOTE: 'stauts' is OPTIONAL
-  2. Accept GET reqeust to the API endpoint /api/tasks
-     - Returns an array of tasks created with POST request
-       NOTE: JSON object is: 
-          {"id":<number>, "title":<string>, "ownerId":<number>, "status":<string>}
- */
+  A simple NodeJS API server for ToDo application:
+  1. Accepts POST to /api/v1/login
+  2. Accepts POST to /api/v1/user to create a user
+  3. Accpets GET to /api/v1/user to read all users (should ONLY be called by Admin users)
+  4. Accepts PUT to /api/v1/user/{id} to update user with id 'id' 
+*/
 
 const http = require('http');
 
-const hostname = '127.0.0.1';
-const port = 3000;
-const api_tasks = "/api/tasks"
+const HOSTNAME = '127.0.0.1';
+const PORT = 3000;
+const LOGIN_ENDPOINT = "/api/v1/login"
+const USER_ENDPOINT = "/api/v1/user"
+const SUPPORTED_VERSION = 'v1'
 
 // Configure server for handling connections
 const server = http.createServer((req, res) => {
+  var path = req.url
+  var method = req.method
+
+  if (!path.includes(SUPPORTED_VERSION)) {
+    console.log("ERROR - Unsupported version in " + path)
+    res.statusCode = 500 // internal server error
+    res.end("Unsuported version")
+    return
+  }
+
+  /*
+    due to CSR (Cross-Site-Request) and CORS (Cross-Origin-Resource-Sharinging), 
+    we neeed to handle the OPTIONS method which will tell the browser which 
+    mothods are safe to call.
+    #### NOTE: ####
+    No harm if we send these headers when the request wasn't preceeded by an OPTIONS request
+  */
+  // Set CORS headers
+  if (req.headers.origin) {
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  }
+  if (req.headers['access-control-request-method']) {
+    res.setHeader('Access-Control-Allow-Methods', req.headers['access-control-request-method']);
+  }
+  if (req.headers['access-control-request-headers']) {
+    res.setHeader('Access-Control-Allow-Headers', req.headers['access-control-request-headers']);
+  }
+
+  if ('OPTIONS' == method) {
+    res.writeHead(200);
+    res.end();
+    return;
+  }
+
+  if (path.includes(LOGIN_ENDPOINT)) {
+    handleLoginEndpoint(req, res)
+    return
+  }
+
+  if (path.includes(USER_ENDPOINT)) {
+    handleUserEndpoint(req, res)
+    return
+  }
+
+  console.log("ERROR - Unexpected requested path: " + path)
+  res.statusCode = 404 // not found
+  res.end("not found")
+});
+
+// start listening and server connections
+server.listen(PORT, HOSTNAME, () => {
+  console.log(`Server running at http://${HOSTNAME}:${PORT}/`);
+});
+
+// ------------
+var dbUsers = []
+
+// route user request action appropriately
+function handleUserEndpoint(req, res) {
   var method = req.method
   var path = req.url
-
-  // if request path is NOT supported, return error
-  if(api_tasks != path){
-    console.log("ERROR - Unexpected requested path: " + path)
-
-    res.statusCode = 404  // not found
-    res.end("not found")
+  if ('GET' == method && USER_ENDPOINT == path) {
+    console.log("INFO: Calling GET to " + path)
+    handleGetAllUsers(req, res)
     return
   }
 
-  if('GET' == method){
-    handleGetTasks(req, res)
+  if ('POST' == method && USER_ENDPOINT == path) {
+    console.log("INFO: Calling POST to " + path)
+    handleCreateUser(req, res)
     return
   }
-  
-  if('POST' == method){
-    handlePostTasks(req, res)
+
+  if ('PUT' == method && path.includes(USER_ENDPOINT)) {
+    console.log("INFO: Calling PUT to " + path)
+    handleUpdateUser(req, res)
+    return
+  }
+
+  if ('DELETE' == method && path.includes(USER_ENDPOINT)) {
+    console.log("INFO: Calling DELETE to " + path)
+    handleDeleteUser(req, res)
     return
   }
 
   // end request for unsupported methods
-    console.log("ERROR - Unsupported method: " + method)
+  console.log("ERROR - Unsupported method: " + method)
+  res.statusCode = 404 // not found
+  res.end("not found")
+}
 
-    res.statusCode = 404  // not found
-    res.end("not found")
-});
+/* 
+  Method: DELETE
+  Endpoint: /api/v1/user/{id}
+  
+  delete the object with id 'id' if exist in the db. 
+  TODO no check for which user id doing the delete etc.
+*/
+function handleDeleteUser(req, res) {
+  var userId = getUserIdFromPath(req.url)
+  var index = getUserIndexById(userId)
 
-// start listening and server connections
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+  if (-1 == index) {
+    console.log("ERROR: No user with id " + userId)
+    res.statusCode = 500;
+    res.end('No user found. Internal server error')
+    return
+  }
 
-// ------------
-var dbTasks = []
+  dbUsers.splice(index, 1)
+  console.log("User with id " + userId + " removed.")
+  res.statusCode = 200
+  res.setHeader('Content-Type', 'application/json')
+  res.end('{"id": ' + userId + '}')
+}
 
-/* return the array of tasks as a JSON string */
-function handleGetTasks(req, res){
-  var result = JSON.stringify(dbTasks)
+/* 
+  Method: PUT
+  Endpoint: /api/v1/user/{id}
+  
+  read the PUT body, convert from JSON to JS object and update in db. 
+  NOTE: This doesn't handle errors at all
 
-  console.log(dbTasks.length + " items returned")
+*/
+function handleUpdateUser(req, res) {
+  var userId = getUserIdFromPath(req.url)
+  var body = ''
+  var user = findUserById(userId)
 
+  if (!user) {
+    console.log("ERROR: No user with id " + userId)
+    res.statusCode = 500;
+    res.end('No user found. Internal server error')
+    return
+  }
+
+  req.on('data', function(chunk) {
+    body = body + chunk
+  });
+
+  req.on('end', function() {
+    var data = JSON.parse(body)
+
+    if (data.username) {
+      user.username = data.username;
+    }
+
+    if (data.password) {
+      user.password = data.password;
+    }
+
+    if (data.admin != user.admin) {
+      user.admin = data.admin;
+    }
+
+    console.log("INFO: Updated users: ", JSON.stringify(user))
+    res.statusCode = 200
+    res.setHeader('Content-Type', 'application/json')
+    res.end('{"id": ' + user.id + '}')
+  })
+}
+
+/* 
+  Method: POST
+  Endpoint: /api/v1/user
+  
+  read the POST body, convert from JSON to JS object and store in db. 
+  Add an "id" field to each new 
+  NOTE: This doesn't handle errors at all
+*/
+function handleCreateUser(req, res) {
+  var body = ''
+
+  req.on('data', function(chunk) {
+    body = body + chunk
+  });
+
+  req.on('end', function() {
+    var user = JSON.parse(body)
+      // username and password are required
+    if (!user.username || !user.password) {
+      res.statusCode = 500;
+      res.end('No user found. Internal server error')
+      return
+    }
+
+    // if the 'admin' field isn't provided, set it to
+    if (null == user.admin) {
+      user.admin = false
+    }
+
+    user.id = dbUsers.length + 1
+    dbUsers.push(user)
+
+    console.log("User with id " + user.id + " added.")
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end('{"id": ' + user.id + '}');
+  })
+}
+
+/* 
+  Method: GET
+  Endpoint: /api/v1/user
+  
+   return the array of users, without their password as a JSON string 
+   NOTE: Only Admin users should call this method
+ */
+function handleGetAllUsers(req, res) {
+  var usersToReturn = dbUsers.map(function(user) {
+    var temp = Object.assign({}, user) // clone user
+    delete temp.password // remove password from cloned object
+    return temp
+  })
+
+  var result = JSON.stringify({
+    users: usersToReturn
+  })
   res.statusCode = 200;
   res.setHeader('Content-Type', 'application/json');
   res.end(result);
 }
 
-/* read the POST body, convert from JSON to JS object and store in db. Add an "id" field 
-   to each new task NOTE: This doesn't handle errors at all
+
+/* 
+Login endpoint
 */
-function handlePostTasks(req, res){
-    var body = ''
+function handleLoginEndpoint(req, res) {
+  var method = req.method
 
-    req.on('data', function(chunk){
-      body = body + chunk
-    });
+  if ('POST' != method) {
+    // end request for unsupported methods
+    console.log("ERROR - Unsupported method: " + method + " for endpoint " + req.url)
+    res.statusCode = 500 // internal server error
+    res.end("internal server error ")
+    return
+  }
 
-    req.on('end', function(){
-      var item = JSON.parse(body)
-      item.id = dbTasks.length + 1
-      dbTasks.push(item)
-      console.log("Item with id " + item.id + " added.")
+  handleLogin(req, res)
+}
 
+/* 
+  Method: POST
+  Endpoint: /api/v1/login
+  
+  read the POST body, convert from JSON to JS object and check against db. 
+  Required object: {"username":<string>, "password":<string>}
+*/
+function handleLogin(req, res) {
+  var body = ''
 
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'application/json');
-      res.end('{"id": ' + item.id + '}');
-    })
+  req.on('data', function(chunk) {
+    body = body + chunk
+  });
+
+  req.on('end', function() {
+    var loginInfo = JSON.parse(body)
+
+    // validate that all required fields are provided
+    if (!loginInfo || null == loginInfo.username || null == loginInfo.password) {
+      console.log("ERROR: Invalid login data ")
+      res.statusCode = 500;
+      res.end('Invalid credential. Internal server error')
+      return
+    }
+
+    // see if the user exist
+    var user = findUserByUsernameAndPasswod(loginInfo.username, loginInfo.password)
+    if (!user) {
+      console.log("ERROR: No user " + loginInfo.username)
+      res.statusCode = 500;
+      res.end('No user found. Internal server error')
+      return
+    }
+
+    // all checks passed, user can login
+    var temp = Object.assign({}, user)
+    delete temp.password
+    var result = JSON.stringify(temp)
+    console.log("INFO: User logged in: ", result)
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(result);
+  })
+}
+
+// ---------- Helper functions
+/** using username and password, in the user */
+function findUserByUsernameAndPasswod(username, password) {
+  if (null == username || null == password) {
+    return null
+  }
+
+  var user = dbUsers.find(function(el) {
+    if (el.username == username && el.password == password) {
+      return true
+    }
+
+    return false
+  });
+
+  return user
+}
+
+/**
+  returns object if found, null otherwise
+*/
+function findUserById(userId) {
+  var index = getUserIndexById(userId)
+
+  if (index == -1) {
+    return null;
+  }
+
+  return dbUsers[index]
+}
+
+function getUserIndexById(userId) {
+  if (!userId || -1 == userId) {
+    return -1;
+  }
+
+  var index = dbUsers.findIndex(function(el, idx) {
+    if (el.id == userId) {
+      return true
+    }
+    return false
+  });
+
+  return index;
+}
+
+/* 
+expected path is /api/vX/entity/id, thus split on '/' create 5 fields
+NOTE: The first fields is empty: ['', 'api', 'vX', 'entity', id]
+ */
+function getUserIdFromPath(path) {
+  var fields = path.split('/')
+  if (5 != fields.length) {
+    return -1
+  }
+
+  return fields[fields.length - 1]
 }

@@ -1,0 +1,42 @@
+<div>
+    <h5>Change Username/Password</h5>
+    <form name="settings">
+        <table border="0">
+            <tr>
+                <td>Username:</td>
+                <td>
+                    <input type="text" ng-model="user.username" />
+                </td>
+            </tr>
+            <tr>
+                <td>Change password?</td>
+                <td>
+                    <input type="checkbox" ng-model="changePassword" />
+                </td>
+            </tr>
+            <tr ng-show="changePassword">
+                <td>
+                    Password:
+                </td>
+                <td>
+                    <input type="password" ng-model="user.password" ng-required/>
+                </td>
+            </tr>
+            <tr ng-show="changePassword">
+                <td>
+                    Retype Password:
+                </td>
+                <td>
+                    <input type="password" ng-model="password2" ng-required />
+                </td>
+            </tr>
+        </table>
+
+        <div>
+            <div class="btns_left">
+                <input ng-disabled="!settings.$error && user.password === password2" type="button" value="UPDATE" ng-click="updateUser()" />
+                <input type="button" value="CANCEL" ng-click="cancelUser()" />
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,8 +1,8 @@
 var app = angular.module("ToDoApp")
 
-app.controller("EditUserController", function ($scope, UserDbService, $location, $routeParams) {
-  if (!UserDbService.isAuthenticated()) {
-    $location.path('/login')
+app.controller("EditUserController", function($scope, UserDbService, $location, $routeParams) {
+  if (!UserDbService.isAdmin()) {
+    $location.path('/')
   }
 
   $scope.isNew = false;
@@ -12,35 +12,33 @@ app.controller("EditUserController", function ($scope, UserDbService, $location,
   $scope.user = UserDbService.getUserById(userId)
 
   if (!$scope.user) {
-    $location.path('/')
+    $location.path('/user/list')
   }
 
-  $scope.updateUser = function () {
-    UserDbService.updateUser(userId, $scope.user)
+  $scope.updateUser = function() {
+    UserDbService.updateUser(userId, $scope.user, function(updatedOnServer) {
+      if (updatedOnServer) {
+        $location.path('/user/list')
+      }
+    })
+  };
+
+  $scope.cancelUser = function() {
     $location.path('/user/list')
   };
 
-  $scope.cancelUser = function () {
-    if (!UserDbService.isAdmin()) {
-      $location.path('/')
-    }
-
-    $location.path('/user/list')
-  };
-
-  $scope.removeUser = function (userId) {
-    if (!UserDbService.isAdmin()) {
-      $location.path('/')
-    }
-
+  $scope.removeUser = function(userId) {
     var user = UserDbService.getUserById(userId)
 
-    var ok = window.confirm("Do really want to delete '" +
+    var okToDelete = window.confirm("Do really want to delete '" +
       user.username + "'?")
 
-    if (ok) {
-      UserDbService.removeUser(userId)
-      $location.path('/user/list')
+    if (okToDelete) {
+      UserDbService.removeUser(userId, function(deletedOnServer) {
+        if (deletedOnServer) {
+          $location.path('/user/list')
+        }
+      })
     }
   };
 });

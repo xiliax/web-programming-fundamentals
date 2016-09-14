@@ -1,51 +1,65 @@
 var app = angular.module("ToDoApp")
 
-app.service('UserDbService', function ($rootScope) {
-  var users = [];
-  var uniqueId = 0; // always incrementing
-  var anonymousUser = {
-    username: 'anonymous'
-    , id: null
-    , admin: false
-  };
-  var currentUser = angular.copy(anonymousUser);
+app.service('UserDbService', function($rootScope, $http) {
+  var LOGIN_ENDPOINT = "http://localhost:3000/api/v1/login"
+  var USER_ENDPOINT = "http://localhost:3000/api/v1/user"
 
-  // add first and only user 'admin:admin'
-  addUser({
-    username: 'admin'
-    , password: 'admin'
-    , admin: true
-  });
+  // cache of users fetched from backen, only used to find a user to load user-edit view
+  var users = []
+  var anonymousUser = {
+    username: 'anonymous',
+    id: null,
+    admin: false
+  };
+
+  var currentUser = angular.copy(anonymousUser);
 
   /** make a new user account object and return it */
   function initUser() {
     return {
-      username: ''
-      , password: ''
-      , admin: false
+      username: '',
+      password: '',
+      admin: false
     };
   }
 
   /**
     get a copy of all Users
    */
-  function getAllUsers() {
-    return angular.copy(users);
+  function getAllUsers(callback) {
+
+    // get all users from api server
+    $http.get(USER_ENDPOINT).success(function(resp) {
+      // save a local copy when we want to load the user edit form
+      users = angular.copy(resp.users)
+
+      callback(angular.copy(users));
+    }).error(function(resp, status) {
+      users = []
+      callback([])
+    });
+
   }
 
   /**
-    return true if object added, false otherwise
-   */
-  function addUser(user) {
-    if (user) {
-      uniqueId += 1;
-      // give each object a unique id before sotring
-      user.id = uniqueId;
-      users.push(user);
-      return true;
+    user - JavaScript object with key-value pairs
+    callback - function(addedOnServer : boolean)
+  */
+  function addUser(user, callback) {
+    if (!user) {
+      callback(false)
     }
 
-    return false;
+    // only admin user can add account
+    if (!isAdminUser()) {
+      callback(false)
+    }
+
+    $http.post(USER_ENDPOINT, JSON.stringify(user)).success(function(resp) {
+      callback(true)
+    }).error(function(resp, status) {
+      callback(false)
+    })
   }
 
   /**
@@ -62,71 +76,95 @@ app.service('UserDbService', function ($rootScope) {
   }
 
   /**
-    returns true if object was removed, false otherwise
-   */
-  function removeUser(userId) {
-    var index = getUserIndexById(userId)
-
-    if (index == -1) {
-      return false;
+    userId - integer
+    callback - function(removedOnServer : boolean)
+  */
+  function removeUser(userId, callback) {
+    if (!userId) {
+      callback(false)
     }
 
-    // remove object with user.id, since reference might have changed
-    console.log("deleteing user at " + index, users)
-    users.splice(index, 1)
-    console.log("users: ", users)
+    // only admin user can delete account
+    if (!isAdminUser()) {
+      callback(false)
+    }
 
-    return true;
+    $http.delete(USER_ENDPOINT + "/" + userId).success(function(resp) {
+      callback(true)
+    }).error(function(resp, status) {
+      callback(false)
+    })
   }
 
   /**
-    returns true if object was updated, false otherwise
+    call callback with true or false
+    userId - integer
+    data - JavaScript object, key-value pairs
+    callback - function(updatedOnServer : boolean)
    */
-  function updateUser(userId, data) {
-    if (!data) {
-      return false;
-    }
-
-    var index = getUserIndexById(userId)
-
-    if (index == -1) {
-      return false;
+  function updateUser(userId, data, callback) {
+    if (!userId || !data) {
+      callback(false)
     }
 
     // non-admin users can ONLY update their account
     if (!isAdminUser() && (currentUser.id != userId)) {
-      return false
+      callback(false)
     }
 
-    var user = users[index]
-
-    // ensure data integrity by not allow by allowing blank status or title
-    var objectChanged = false;
-    // update object with user.id == userId
-    if (data.username) {
-      user.username = data.username;
-      objectChanged = true;
-    }
-
-    if (data.password) {
-      user.password = data.password;
-      objectChanged = true;
-    }
-
-    if (data.admin != user.admin) {
-      user.admin = data.admin;
-      objectChanged = true;
-    }
-
-    return objectChanged;
+    $http.put(USER_ENDPOINT + "/" + userId, JSON.stringify(data)).success(function(resp) {
+      callback(true)
+    }).error(function(resp, status) {
+      callback(false)
+    })
   }
 
+  /**
+   * login()
+   * username - string 
+   * password - string
+   * errFunc - function(erMesg : string)
+   */
+  function login(username, password, errFunc) {
+    var userLoginInfo = {
+      username: username,
+      password: password
+    }
+
+    // ask server to authenticate user
+    $http.post(LOGIN_ENDPOINT, JSON.stringify(userLoginInfo)).success(function(resp) {
+      currentUser = angular.copy(resp)
+      $rootScope.$broadcast("auth", {})
+    }).error(function(resp, status) {
+      errFunc('Login failed, please try again')
+    });
+
+  }
+
+  function logout() {
+    currentUser = angular.copy(anonymousUser)
+    $rootScope.$broadcast("auth", {})
+  }
+
+  function isAdminUser() {
+    return currentUser.admin;
+  }
+
+  function getCurrentUser() {
+    return angular.copy(currentUser)
+  }
+
+  function isAuthenticated() {
+    return ('anonymous' != currentUser.username)
+  }
+
+  // ----------------- helper function(s)
   function getUserIndexById(userId) {
     if (!userId) {
       return -1;
     }
 
-    var index = users.findIndex(function (el, idx) {
+    var index = users.findIndex(function(el, idx) {
       if (el.id == userId) {
         return true
       }
@@ -141,7 +179,7 @@ app.service('UserDbService', function ($rootScope) {
       return null;
     }
 
-    var index = users.findIndex(function (el, idx) {
+    var index = users.findIndex(function(el, idx) {
       if (el.username == username) {
         return true
       }
@@ -151,41 +189,7 @@ app.service('UserDbService', function ($rootScope) {
     return users[index];
   }
 
-  function login(username, password) {
-    var user = getUserByUsername(username)
-    if (user && user.password === password) {
-      currentUser = {
-        username: user.username
-        , id: user.id
-        , admin: user.admin
-      }
-
-      $rootScope.$broadcast("auth", {})
-      return true
-    }
-
-    currentUser = angular.copy(anonymousUser)
-    $rootScope.$broadcast("auth", {})
-    return false
-  }
-
-  function logout() {
-    currentUser = angular.copy(anonymousUser)
-    $rootScope.$broadcast("auth", {})
-  }
-
-  function isAdminUser() {
-    return currentUser.admin;
-  }
-
-  function getCurrentUser() {
-    return currentUser;
-  }
-
-  function isAuthenticated() {
-    return ('anonymous' != currentUser.username)
-  }
-
+  // ----------------- functions exposed by service
   var service = {};
   service.newUser = initUser;
   service.addUser = addUser;

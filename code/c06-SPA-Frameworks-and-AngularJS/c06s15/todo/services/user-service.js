@@ -1,28 +1,28 @@
 var app = angular.module("ToDoApp")
 
-app.service('UserDbService', function ($rootScope) {
+app.service('UserDbService', function($rootScope) {
   var users = [];
   var uniqueId = 0; // always incrementing
   var anonymousUser = {
-    username: 'anonymous'
-    , id: null
-    , admin: false
+    username: 'anonymous',
+    id: null,
+    admin: false
   };
   var currentUser = angular.copy(anonymousUser);
 
   // add first and only user 'admin:admin'
   addUser({
-    username: 'admin'
-    , password: 'admin'
-    , admin: true
+    username: 'admin',
+    password: 'admin',
+    admin: true
   });
 
   /** make a new user account object and return it */
   function initUser() {
     return {
-      username: ''
-      , password: ''
-      , admin: false
+      username: '',
+      password: '',
+      admin: false
     };
   }
 
@@ -121,43 +121,18 @@ app.service('UserDbService', function ($rootScope) {
     return objectChanged;
   }
 
-  function getUserIndexById(userId) {
-    if (!userId) {
-      return -1;
-    }
-
-    var index = users.findIndex(function (el, idx) {
-      if (el.id == userId) {
-        return true
-      }
-      return false
-    });
-
-    return index;
-  }
-
-  function getUserByUsername(username) {
-    if (!username) {
-      return null;
-    }
-
-    var index = users.findIndex(function (el, idx) {
-      if (el.username == username) {
-        return true
-      }
-      return false
-    });
-
-    return users[index];
-  }
-
+  /**
+   * login()
+   * username - string 
+   * password - string
+   */
   function login(username, password) {
     var user = getUserByUsername(username)
     if (user && user.password === password) {
       currentUser = {
-        username: user.username
-        , id: user.id
-        , admin: user.admin
+        username: user.username,
+        id: user.id,
+        admin: user.admin
       }
 
       $rootScope.$broadcast("auth", {})
@@ -186,6 +161,37 @@ app.service('UserDbService', function ($rootScope) {
     return ('anonymous' != currentUser.username)
   }
 
+  // ----------------- helper function(s)
+  function getUserIndexById(userId) {
+    if (!userId) {
+      return -1;
+    }
+
+    var index = users.findIndex(function(el, idx) {
+      if (el.id == userId) {
+        return true
+      }
+      return false
+    });
+
+    return index;
+  }
+
+  function getUserByUsername(username) {
+    if (!username) {
+      return null;
+    }
+
+    var index = users.findIndex(function(el, idx) {
+      if (el.username == username) {
+        return true
+      }
+      return false
+    });
+
+    return users[index];
+  }
+  // ----------------- functions exposed by service
   var service = {};
   service.newUser = initUser;
   service.addUser = addUser;
