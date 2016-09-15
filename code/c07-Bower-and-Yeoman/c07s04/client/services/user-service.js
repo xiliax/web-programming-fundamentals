@@ -27,7 +27,6 @@ app.service('UserDbService', function($rootScope, $http) {
     get a copy of all Users
    */
   function getAllUsers(callback) {
-
     // get all users from api server
     $http.get(USER_ENDPOINT).success(function(resp) {
       // save a local copy when we want to load the user edit form
@@ -38,7 +37,6 @@ app.service('UserDbService', function($rootScope, $http) {
       users = []
       callback([])
     });
-
   }
 
   /**
