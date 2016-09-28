@@ -1,0 +1,34 @@
+{
+  "tasks": [
+    {
+      "title": "Admin's task 1"
+      , "id": 1
+      , "status": "Inprogress"
+      , "ownerId": 1
+    }
+    , {
+      "title": "Mike's task 2"
+      , "id": 2
+      , "status": "Completed"
+      , "ownerId": 1
+    }
+    , {
+      "title": "task 3"
+      , "id": 3
+      , "status": "Not started"
+      , "ownerId": 2
+    }
+    , {
+      "title": "task 4"
+      , "id": 4
+      , "status": "Not started"
+      , "ownerId": 3
+    }
+    , {
+      "title": "task 5"
+      , "id": 5
+      , "status": "Not started"
+      , "ownerId": 2
+    }
+]
+}

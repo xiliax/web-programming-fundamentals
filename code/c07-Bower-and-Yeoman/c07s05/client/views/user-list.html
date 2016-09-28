@@ -1,0 +1,27 @@
+<div>
+  User count: {{users.length}}
+  <hr/> Search:
+  <input type="text" ng-model='qstring' /><span> | </span>
+  <a href="#/user/new">Add User</a>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Username</th>
+        <th>Admin</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="user in users | filter : qstring">
+        <td>{{user.id}}</td>
+        <td>{{user.username}}</td>
+        <td ng-show="user.admin">YES</td>
+        <td ng-show="!user.admin">NO</td>
+        <td>
+          <a href="#/user/edit/{{user.id}}">E</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
