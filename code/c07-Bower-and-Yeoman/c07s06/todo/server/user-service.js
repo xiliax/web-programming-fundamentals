@@ -25,7 +25,6 @@ function getEndPoint() {
     return ENDPOINT;
 }
 
-
 // route user request action appropriately
 function handleEndpoint(req, res) {
     var method = req.method

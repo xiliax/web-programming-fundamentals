@@ -18,6 +18,7 @@ function add(task) {
         return false
     }
 
+    // if the 'status' field isn't provided, set it to 'Not started'
     if (null == task.status) {
         task.status = 'Not started'
     }

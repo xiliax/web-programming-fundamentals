@@ -63,23 +63,6 @@ function getAll() {
     return dbUsers;
 }
 
-/** using username and password, in the user */
-function findByUsernameAndPasswod(username, password) {
-    if (null == username || null == password) {
-        return null
-    }
-
-    var user = dbUsers.find(function (el) {
-        if (el.username == username && el.password == password) {
-            return true
-        }
-
-        return false
-    });
-
-    return user
-}
-
 /**
   returns object if found, null otherwise
 */
@@ -106,4 +89,21 @@ function getIndexById(userId) {
     });
 
     return index;
+}
+
+/** using username and password, in the user */
+function findByUsernameAndPasswod(username, password) {
+    if (null == username || null == password) {
+        return null
+    }
+
+    var user = dbUsers.find(function (el) {
+        if (el.username == username && el.password == password) {
+            return true
+        }
+
+        return false
+    });
+
+    return user
 }
