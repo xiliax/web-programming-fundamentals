@@ -1,0 +1,22 @@
+{
+  "name": "todo-client",
+  "homepage": "https://github.com/xiliax/web-programming-fundamentals",
+  "authors": [
+    "Verrol Adams <verrol@xiliax.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "angularjs#^1.5.8",
+    "angular-route": "^1.5.8"
+  }
+}

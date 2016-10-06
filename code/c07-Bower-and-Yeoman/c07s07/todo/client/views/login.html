@@ -1,0 +1,32 @@
+<div>
+  <h5>Login</h5>
+  <form>
+    <div ng-show="mesg">
+      {{mesg}}
+    </div>
+    <table border="0">
+      <tr>
+        <td>Username:</td>
+        <td>
+          <input type="text" ng-model="username" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Password:
+        </td>
+        <td>
+          <input type="password" ng-model="password" />
+        </td>
+      </tr>
+    </table>
+
+    <div>
+      <div class="btns_left">
+        <input ng-disabled="!username || !password" type="button" value="LOGIN" ng-click="login(username, password)" />
+      </div>
+      <div class="btns_right">
+      </div>
+    </div>
+  </form>
+</div>
