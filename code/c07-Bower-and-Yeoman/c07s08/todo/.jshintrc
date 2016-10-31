@@ -1,0 +1,14 @@
+{
+    "globals": {
+        "angular": true
+    }, // additional predefined global variables
+    "indent": 2, // {int} Number of spaces to use for indentation
+    "unused": true, // true: Require all defined variables be used
+    "plusplus": false, // true: Prohibit use of `++` & `--`
+    "undef": true, // true: Require all non-global variables to be declared (prevents global leaks)
+    "strict": true, // true: Requires all functions run in ES5 Strict Mode
+    "asi": true, // true: Tolerate Automatic Semicolon Insertion (no semicolons)
+    "boss": false, // true: Tolerate assignments where comparisons would be expected
+    "lastsemic": true // true: Tolerate omitting a semicolon for the last statement of a 1-line block
+
+}
