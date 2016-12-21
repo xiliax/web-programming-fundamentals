@@ -4,7 +4,7 @@
   </h1>
 
   <ol>
-    <li ng-repeat="c in ctrl.comments">{{c.subject}} by {{c.author}}
+    <li ng-repeat="c in ctrl.comments"><b>{{c.subject}}</b> by <i>{{c.author}}</i>[Task #{{c.taskId}}]
     </li>
   </ol>
 </div>
