@@ -2,8 +2,8 @@
   'use strict';
 
   ng.module('demoApp')
-    .controller('CommentController', ['Comment', 'CommentResource',
-      function (Comment, CommentResource) {
+    .controller('CommentController', ['Comment', 'CommentDAO',
+      function (Comment, CommentDAO) {
         var self = this;
         self.comment = new Comment({})
 
@@ -13,32 +13,17 @@
           new Comment({ id: 3, subject: 'not so good', author: 'Smither Doe' })
         ];
 
-        var i = 0;
-        for (; i < self.comments.length; i++) {
-          var x = self.comments[i]
-          console.log(x.id, x.isValid())
-        }
-
         self.remove = function (commentId) {
-          var c = {id:commentId}
-
-          CommentResource
-            .delete(c)
-            .$promise
-            .then(function (result) {
-              console.dir(result)
-            })
+          CommentDAO
+            .remove(commentId)
             .catch(function (err) {
               self.mesg = err
             });
         }
 
         self.fetch = function (commentId) {
-          var c = {id:commentId}
-
-          CommentResource
-            .getById(c)
-            .$promise
+          CommentDAO
+            .getById(commentId)
             .then(function (result) {
               console.dir(result)
             })
@@ -48,17 +33,13 @@
         }
 
         self.create = function (comment) {
-          var c = new Comment(comment)
-
-          CommentResource
-            .insert(c)
-            .$promise
-            .then(function (result) {
-              self.comments.push(result)
+          CommentDAO.create(comment)
+            .then(function (x) {
+              self.comments.push(x)
             })
             .catch(function (err) {
-              self.mesg = err
-            });
+              self.mesg = err;
+            })
         }
 
         return self;
