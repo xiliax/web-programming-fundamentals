@@ -2,7 +2,18 @@
   <h1>
     Comments
   </h1>
+  Message: {{ctrl.mesg | json}}
+  <form>
+    <label for="commentId">ID:</label>
+    <input name="commentId" type="text" ng-model="ctrl.comment.id">
 
+    <label for="subject">Subject:</label>
+    <input name="subject" type="text" ng-model="ctrl.comment.subject">
+    <hr>
+    <button ng-click="ctrl.create(ctrl.comment)">CREATE</button>
+    <button ng-click="ctrl.fetch(ctrl.comment.id)">GET</button>
+    <button ng-click="ctrl.remove(ctrl.comment.id)">DELETE</button>
+  </form>
   <ol>
     <li ng-repeat="c in ctrl.comments"><b>{{c.subject}}</b> by <i>{{c.author}}</i>[Task #{{c.taskId}}]
     </li>
