@@ -1,0 +1,12 @@
+<div class="container">
+  <h1>
+    Admin User Listing
+  </h1>
+
+  <ol>
+    <li ng-repeat="u in ctrl.users">{{u.username}} ({{u.id}})</li>
+  </ol>
+
+<input type="text" ng-model="ctrl.user.username">
+<button ng-class="ctrl.create(ctrl.user)">CREATE USER</button>
+</div>

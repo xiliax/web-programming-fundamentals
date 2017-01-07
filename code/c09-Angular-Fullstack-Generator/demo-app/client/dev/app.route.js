@@ -16,6 +16,11 @@
             controller: 'CommentController',
             controllerAs: 'ctrl'
           })
+          .when('/admin/users', {
+            templateUrl: 'user/templates/users-list.html',
+            controller: 'UserListController',
+            controllerAs: 'ctrl'
+          })
           .otherwise({
             redirectTo: '/'
           });
