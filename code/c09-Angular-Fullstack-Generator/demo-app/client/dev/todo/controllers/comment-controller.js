@@ -7,15 +7,14 @@
         var self = this;
         self.comment = new Comment({})
 
-        self.comments = [
-          new Comment({ id: 1, subject: 'Really like this', author: 'John Doe', taskId: 1 }),
-          new Comment({ id: 2, subject: 'awesome stuff', author: 'Jane Doe', taskId: 3 }),
-          new Comment({ id: 3, subject: 'not so good', author: 'Smither Doe' })
-        ];
+        self.comments = [];
 
         self.remove = function (commentId) {
           CommentDAO
             .remove(commentId)
+            .then(function(){
+              refresh()
+            })
             .catch(function (err) {
               self.mesg = err
             });
@@ -42,6 +41,13 @@
             })
         }
 
+        function refresh(){
+          CommentDAO.getAll()
+            .then((comments) => self.comments = comments)
+            .catch(err => console.log(err))
+        }
+
+        refresh()
         return self;
       }
     ]);

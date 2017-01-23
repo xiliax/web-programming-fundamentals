@@ -9,6 +9,8 @@
           this.subject = null;
           this.author = null;
           this.taskId = null;
+          this.body = null;
+          this.createAt = null;
           ng.extend(this, comment)
         };
 

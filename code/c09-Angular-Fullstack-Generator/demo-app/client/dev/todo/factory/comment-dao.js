@@ -9,7 +9,7 @@
 
         CommentDAO.prototype.getAll = function(){
           return CommentResource
-            .get(c)
+            .get()
             .$promise
             .then(function (results) {
               return results;

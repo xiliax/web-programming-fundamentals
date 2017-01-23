@@ -12,10 +12,10 @@
     <hr>
     <button ng-click="ctrl.create(ctrl.comment)">CREATE</button>
     <button ng-click="ctrl.fetch(ctrl.comment.id)">GET</button>
-    <button ng-click="ctrl.remove(ctrl.comment.id)">DELETE</button>
   </form>
   <ol>
     <li ng-repeat="c in ctrl.comments"><b>{{c.subject}}</b> by <i>{{c.author}}</i>[Task #{{c.taskId}}]
+    (<a ng-click="ctrl.remove(c._id)">X</a>)
     </li>
   </ol>
 </div>
