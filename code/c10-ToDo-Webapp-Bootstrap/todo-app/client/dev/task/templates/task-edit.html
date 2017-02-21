@@ -1,0 +1,62 @@
+<div class="container">
+
+    <div class="task-panel transition">
+        <form name="TaskForm">
+
+            <div class="title-container">
+                <h1 ng-show="!ctrl.task._id" class="text-muted text-center">Create Task</h1>
+                <h1 ng-show="ctrl.task._id" class="text-muted text-center">Edit Task</h1>
+            </div>
+
+            <div ng-if="ctrl.mesg" class="alert alert-warn">
+                {{ctrl.mesg}}
+            </div>
+
+            <div class="tasks-container">
+                <div class="form-group">
+
+                    <label for="subject">Subject</label>
+                    <input type="text" class="form-control input-lg" placeholder="Subject" ng-model="ctrl.task.subject" id="subject" maxlength="100"
+                        ng-maxlength="100" ng-minlength="5" required autofocus name="subject" />
+                    <ng-messages for="TaskForm.subject.$error">
+                        <ng-message when="required" class="error-msg">Task field is required</ng-message>
+                        <ng-message when="minlength" class="error-msg">Min of 5 chars</ng-message>
+                        <ng-message when="maxlength" class="error-msg">Max of 100 chars</ng-message>
+                    </ng-messages>
+                </div>
+
+                <div class="form-group">
+                    <label for="body">Body</label>
+                    <textarea class="form-control " ng-model="ctrl.task.body" id="body" cols="100" rows="4"></textarea>
+                </div>
+
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" ng-model="ctrl.task.done">Done</input>
+                    </label>
+                </div>
+            </div>
+
+            <hr />
+
+
+        </form>
+
+    </div>
+    <div>
+        <div ng-show="!ctrl.task._id">
+            <button ng-click="ctrl.createTask(ctrl.task)" id="create-task-button" class="btn btn-success btn-lg submit-todo" ng-disabled="TaskForm.$invalid || !ctrl.task.isValid()"> CREATE </button>
+            <button ng-click="ctrl.cancelUpdate()" id="cancel-task-button" class="btn btn-lg"> CANCEL </button>
+        </div>
+        <!-- TODO - 2 - Add a button for to call update when this template is being used to edit an existing Task -->
+        <div class="row" ng-show="ctrl.task._id">
+            <div class="col-lg-4">
+                <button ng-click="ctrl.updateTask(ctrl.task)" id="update-task-button" class="btn btn-success btn-lg submit-todo" ng-disabled="TaskForm.$invalid || !ctrl.task.isValid()"> UPDATE </button>
+                <button ng-click="ctrl.cancelUpdate()" id="cancel-task-button" class="btn btn-lg"> CANCEL </button>
+            </div>
+            <div class=".col-lg-4 .col-lg-offset-4">
+                <button ng-click="ctrl.deleteTask(ctrl.task._id)" id="delete-task-button" class="btn btn-danger btn-lg"> DELETE </button>
+            </div>
+        </div>
+    </div>
+</div>

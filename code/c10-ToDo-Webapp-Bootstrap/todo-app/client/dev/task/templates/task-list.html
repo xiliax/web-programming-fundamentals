@@ -1,0 +1,39 @@
+<div class="container">
+
+  <div class="todo-panel transition">
+
+    <h1>
+      Task Listing
+    </h1>
+
+    <p ng-if="ctrl.mesg">
+      Error Message: {{ctrl.mesg}}
+    </p>
+
+
+    <table class="table table-striped">
+      <tbody>
+        <tr ng-repeat="t in ctrl.tasks | orderBy: '-createdAt'">
+          <td class="text-muted ">
+            <span ng-bind="t.subject"></span>
+          </td>
+          <td>
+            <!--<a ng-click="ctrl.deleteTask(t._id)">x</a>-->
+            <a href="/task/edit/{{t._id}}">EDIT</a>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+
+    <div ng-if="!ctrl.tasks.length">
+      <h3 class="text-muted text-center">Nothing to do. Go play outside :D</h3>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="footer-container">
+    <a href="/task/create" class="btn btn-success btn-lg"> ADD </a>
+  </div>
+</div>

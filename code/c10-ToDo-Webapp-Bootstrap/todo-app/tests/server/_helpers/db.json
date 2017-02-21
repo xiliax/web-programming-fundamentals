@@ -1,0 +1,7 @@
+{
+  "db": {
+    "test": {
+      "url": "mongodb://localhost/todo_test"
+    }
+  }
+}
